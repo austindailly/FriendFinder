@@ -1,4 +1,4 @@
-var friendsArray = [
+var friends = [
     {
         name: "Joe",
         photo: "https://i.imgflip.com/kp205.jpg",
@@ -171,4 +171,4 @@ var friendsArray = [
     },
 ];
 
-module.exports = friendsArray;
+module.exports = friends;

@@ -1,34 +1,44 @@
-var friendData = require('../data/friends.js');
+var friends = require("../data/friends.js");
 
 module.exports = function (app) {
-    // Grab data from friends.js
-    app.get("/api/friends", function (req, res) {
-        res.json(friendData);
+    app.get("/api/friends", function(req, res) {
+        res.json(friends);
     });
-    //  console.log(friendData);
-    app.post("/api/friends", function (req, res) {
-        var userScores = req.body;
+
+    app.post("/api/friends", function(req, res) {
+
+        var bestMatch = {
+            name: "",
+            photo: "",
+            friendDifference: 1000
+        };
+
+        console.log(req.body);
+
+        var userData = req.body;
+        var userScores = userData.scores;
+
         console.log(userScores);
 
-        var bestScore = 999999999999999;
-        var bestMatch = {};
+        var totalDifference = 0;
 
-        for (var i = 0; i < friendData.length; i++) {
-            var friendScore = compareScores(userScores.scores, friendData[i].scores);
+        for (var i = 0; i < friends.length; i++) {
+            console.log(friends[i]);
+            totalDifference = 0;
 
-            if (friendScore < bestScore) {
-                bestScore = friendScore;
-                bestMatch = friendData[i]
+            for (var j = 0; j < friends[i].scores[j]; j++) {
+                totalDifference += Math.abs(parseInt(userScores[j]) - parseInt(friends[i].scores[j]));
+
+                if (totalDifference <= bestMatch.friendDifference) {
+                    bestMatch.name = friends[i].name;
+                    bestMatch.photo = friends[i].photo;
+                    bestMatch.friendDifference = totalDifference;
+                }
             }
         }
-        res.json(bestMatch)
+        friends.push(userData);
+
+        res.json(bestMatch);
     });
-    function compareScores(userScores, scores) {
-        var diff = 0
-        for (var i = 0; i < userScores.length; i++) {
-            diff += Math.abs(userScores[i] - scores[i]);
-        }
-        return diff
-    }
-};
+}
 
